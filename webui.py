@@ -80,7 +80,7 @@ def run_tts(
     gender=None,
     pitch=None,
     speed=None,
-    save_dir="example/results",
+    save_dir="output/results",
 ):
     """Perform TTS inference on text chunks and concatenate results."""
     os.makedirs(save_dir, exist_ok=True)
@@ -91,6 +91,8 @@ def run_tts(
     logging.info(f"Processing {len(chunks)} text chunks.")
     
     audios = []
+    torch.manual_seed(42)  # Ensure voice consistency across chunks
+    
     for i, chunk in enumerate(chunks):
         logging.info(f"[Chunk {i+1}/{len(chunks)}] Generating: {chunk}")
         with torch.no_grad():
@@ -110,7 +112,8 @@ def run_tts(
     final_audio = torch.cat(audios, dim=-1)
     sf.write(final_output_path, final_audio.cpu().numpy(), samplerate=16000)
     logging.info(f"Audio saved at: {final_output_path}")
-    return final_output_path, final_output_path  # Returning both for Gradio compatibility
+    
+    return final_output_path  # Ensure Gradio gets a correct file path
 
 def build_ui(model_dir, device=0):
     global model
@@ -165,7 +168,7 @@ def parse_arguments():
     parser = argparse.ArgumentParser(description="Spark-TTS Gradio server with Chunking.")
     parser.add_argument("--model_dir", type=str, default="pretrained_models/Spark-TTS-0.5B", help="Model directory.")
     parser.add_argument("--device", type=int, default=0, help="GPU device ID.")
-    parser.add_argument("--server_name", type=str, default="127.0.0.1", help="Server host/IP.")
+    parser.add_argument("--server_name", type=str, default="192.168.4.222", help="Server host/IP.")
     parser.add_argument("--server_port", type=int, default=7860, help="Server port.")
     return parser.parse_args()
 
