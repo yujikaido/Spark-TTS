@@ -168,7 +168,7 @@ def parse_arguments():
     parser = argparse.ArgumentParser(description="Spark-TTS Gradio server with Chunking.")
     parser.add_argument("--model_dir", type=str, default="pretrained_models/Spark-TTS-0.5B", help="Model directory.")
     parser.add_argument("--device", type=int, default=0, help="GPU device ID.")
-    parser.add_argument("--server_name", type=str, default="192.168.4.222", help="Server host/IP.")
+    parser.add_argument("--server_name", type=str, default="0.0.0.0", help="Server host/IP.")
     parser.add_argument("--server_port", type=int, default=7860, help="Server port.")
     return parser.parse_args()
 
